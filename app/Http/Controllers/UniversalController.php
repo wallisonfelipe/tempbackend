@@ -16,10 +16,16 @@ class UniversalController extends Controller
         
         $params = $request->all();
 
-        $res = Http::withHeaders([
+        $headers = [
             "Accept" => "application/json",
             "Content-Type" => "application/json"
-        ])->withOptions([
+        ];
+
+        if ($request->header("Authorization")) {
+            $headers["Authorization"] = $request->header("Authorization");
+        }
+
+        $res = Http::withHeaders($headers)->withOptions([
             "verify" => false
         ])->{strtolower($request->method())}($url, $params);
 
